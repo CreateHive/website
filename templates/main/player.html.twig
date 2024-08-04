@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CreateHive | Infos of {{ player.name }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/playerinfo.css">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/minecraftia" type="text/css"/>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="search-box">
+            <input class="search" type="text" id="player-search" placeholder="Search player">
+        </div>
+        <div class="player-box">
+            {% if player.isEmpty is not defined %}
+                <div id="player-info">
+                    {% set lastPlayed = date((player.lastTimePlayed/1000)|round()) %}
+                    {% set difference = date('now').diff(lastPlayed) %}
+                    {% set lastSeen = (lastPlayed | date('m/d/Y')) ~ ' (' ~ lastPlayed|ago ~ ')' %}
+                    <h1 class="name">{{ player.name }}</h1>
+                    <img class='head' src="{{ player.headUrl }}" alt="">
+                    <div class="status">
+                        <h2>Status: </h2>
+                        <span class="isonserver">{{ player.online ? 'Online' : 'Offline' }}</span>
+                        <span class="last-seen">{{ player.online ? '' : ('Last Seen: ' ~ (player.online ? 'Right now' : lastSeen)) }}</span>
+                    </div>
+                    <div class="stats">
+                        <h2>Statistics:</h2>
+                        <p class='playtime'>Playtime: {{ player.playtime }}</p>
+                        <p class="total_cb">Total claimblocks: {{ player.gd.totalClaimBlocks }}</p>
+                        <p class="used_cb">Used
+                            claimblocks: {{ player.gd.totalClaimBlocks - player.gd.remainingClaimBlocks }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div id="player-info">
+                    <h1 class="name">{{ player.message }}</h1>
+                    <img class='head' src="/images/500x500_logo.svg" style="border-radius: 50% !important;" alt="">
+                    <div class="status">
+                        <h2>Status: </h2>
+                        <span class="isonserver"></span>
+                        <span class="last-seen"></span>
+                    </div>
+                    <div class="stats">
+                        <h2>Statistics:</h2>
+                        <p class='playtime'>Playtime: </p>
+                        <p class="total_cb">Total claimblocks: </p>
+                        <p class="used_cb">Used
+                            claimblocks: </p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
