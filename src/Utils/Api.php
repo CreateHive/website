@@ -18,14 +18,14 @@ class Api
 
 	private string $baseUrl = "http://createhive.org:58082";
 
-	public function getCurrentPlayers(): array | string
+	public function getCurrentPlayers(): array | string | null
 	{
 		return $this->parseApi('/players');
 	}
 
-	public function getPlayerFromName(string $playerName): array | string
+	public function getPlayerFromName(string $playerName): array | string | null
 	{
-		return $this->parseApi('/player?name='.$playerName);
+		return $this->parseApi('/player?name=' . $playerName);
 	}
 
 	/**
@@ -35,22 +35,26 @@ class Api
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	private function parseApi(string $endpoint): array | int | string
+	private function parseApi(string $endpoint): array | int | string | null
 	{
-		$response = $this->client->request(
-			'GET',
-			$this->baseUrl . $endpoint
-		);
-
-		$statusCode = $response->getStatusCode();
-		if ($statusCode != 200) {
-			return $statusCode;
-		}
-		// $statusCode = 200
 		try {
-			return json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR | JSON_OBJECT_AS_ARRAY);
-		} catch (Exception) {
-			return $response->getContent();
+			$response = $this->client->request(
+				'GET',
+				$this->baseUrl . $endpoint
+			);
+
+			$statusCode = $response->getStatusCode();
+			if ($statusCode != 200) {
+				return $statusCode;
+			}
+			// $statusCode = 200
+			try {
+				return json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR | JSON_OBJECT_AS_ARRAY);
+			} catch (Exception) {
+				return $response->getContent();
+			}
+		} catch (Exception $e) {
+			return null;
 		}
 	}
 }

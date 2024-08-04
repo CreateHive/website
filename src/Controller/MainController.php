@@ -16,22 +16,19 @@ class MainController extends AbstractController
 	#[Route('/', name: 'app_main')]
 	public function index(): Response
 	{
-		$players = $this->api->getCurrentPlayers();
-		return $this->render('main/index.html.twig', ['players' => $players]);
+		return $this->render('main/index.html.twig');
 	}
 
 	#[Route('/team', name: 'app_team')]
 	public function team(): Response
 	{
-		$players = $this->api->getCurrentPlayers();
-		return $this->render('main/team.html.twig', ['players' => $players]);
+		return $this->render('main/team.html.twig');
 	}
 
 	#[Route('/contact', name: 'app_contact')]
 	public function contact(): Response
 	{
-		$players = $this->api->getCurrentPlayers();
-		return $this->render('main/contact.html.twig', ['players' => $players]);
+		return $this->render('main/contact.html.twig');
 	}
 
 	#[Route('/@{playerName}', name: 'app_player')]
@@ -39,9 +36,8 @@ class MainController extends AbstractController
 	{
 		$player = $this->api->getPlayerFromName($playerName);
 		if (gettype($player) !== gettype([])) {
-			$player = ['isEmpty' => true, 'name'=>'', 'message' => $player];
+			$player = ['isEmpty' => true, 'name' => '', 'message' => $player];
 		}
-		dump($player);
 		return $this->render('main/player.html.twig', ['player' => $player]);
 	}
 
